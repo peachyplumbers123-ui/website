@@ -280,7 +280,7 @@ if (form) {
       }
     }
 
-    const accessKey = (data.get('access_key') || '').toString().trim();
+    const accessKey = (data.get('access_key') || '').toString().trim().replace(/^['"]|['"]$/g, '');
     if (!accessKey || accessKey === 'REPLACE_WITH_REAL_FORM_ACCESS_KEY') {
       openEmailFallback();
       if (submitBtn) submitBtn.disabled = false;
@@ -300,7 +300,13 @@ if (form) {
           form.reset();
           if (startedAtField) startedAtField.value = String(Date.now());
         } else {
-          showSubmitError(json.message || json.error);
+          const providerMessage = json.message || json.error || '';
+          if (/invalid form id|invalid.*access key/i.test(providerMessage)) {
+            openEmailFallback();
+            showSubmitError('The online form is not configured correctly yet. Your email app has opened with the message ready to send.');
+            return;
+          }
+          showSubmitError(providerMessage);
         }
       })
       .catch(() => {
