@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://peachyplumbers.co.uk/sitemap.xml
