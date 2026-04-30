@@ -157,7 +157,10 @@ if (form) {
   form.addEventListener('submit', e => {
     e.preventDefault();
     if (successMsg) successMsg.style.display = 'none';
-    if (submitErrorMsg) submitErrorMsg.style.display = 'none';
+    if (submitErrorMsg) {
+      submitErrorMsg.textContent = 'Could not send your request. Please call us directly on 07752 961456.';
+      submitErrorMsg.style.display = 'none';
+    }
 
     const data = new FormData(form);
     const honeypot = (data.get('website') || '').toString().trim();
@@ -239,20 +242,62 @@ if (form) {
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
 
+    function showSubmitError(message) {
+      if (!submitErrorMsg) return;
+      submitErrorMsg.textContent = message || 'Could not send your request. Please call us directly on 07752 961456.';
+      submitErrorMsg.style.display = 'block';
+    }
+
+    function openEmailFallback() {
+      const fallbackEmail = form.dataset.fallbackEmail || 'peachyplumbers@outlook.com';
+      const subject = data.get('subject') || 'New Quote Request - Peachy Plumbers';
+      const bodyLines = [
+        'New quote request from the Peachy Plumbers website.',
+        '',
+        'Name: ' + data.get('name'),
+        'Phone: ' + data.get('phone'),
+        'Postcode: ' + postcode,
+        'Preferred contact time: ' + (data.get('contactTime') || 'Not provided'),
+        '',
+        'Issue:',
+        data.get('issue'),
+        '',
+        'Note: If you selected a photo, please attach it to this email before sending.'
+      ];
+      window.location.href = 'mailto:' + encodeURIComponent(fallbackEmail) +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(bodyLines.join('\n'));
+      localStorage.setItem('quote-last-submit-at', String(Date.now()));
+      if (successMsg) {
+        successMsg.textContent = 'Your email app has opened with the message ready to send.';
+        successMsg.style.display = 'block';
+      }
+    }
+
+    const accessKey = (data.get('access_key') || '').toString().trim();
+    if (!accessKey || accessKey === 'REPLACE_WITH_REAL_FORM_ACCESS_KEY') {
+      openEmailFallback();
+      if (submitBtn) submitBtn.disabled = false;
+      return;
+    }
+
     fetch('https://api.web3forms.com/submit', { method: 'POST', body: data })
       .then(res => res.json())
       .then(json => {
         if (json.success) {
           localStorage.setItem('quote-last-submit-at', String(Date.now()));
-          if (successMsg) successMsg.style.display = 'block';
+          if (successMsg) {
+            successMsg.textContent = 'Thanks - your request was sent successfully. We will contact you shortly.';
+            successMsg.style.display = 'block';
+          }
           form.reset();
           if (startedAtField) startedAtField.value = String(Date.now());
         } else {
-          if (submitErrorMsg) submitErrorMsg.style.display = 'block';
+          showSubmitError();
         }
       })
       .catch(() => {
-        if (submitErrorMsg) submitErrorMsg.style.display = 'block';
+        showSubmitError();
       })
       .finally(() => {
         if (submitBtn) submitBtn.disabled = false;

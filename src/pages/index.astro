@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+
+const web3FormsAccessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY || 'c95580f6-3e37-45a9-8854-5f7d0dcf8102';
 ---
 
 <!DOCTYPE html>
@@ -10,6 +12,7 @@ import '../styles/global.css';
   <meta name="theme-color" content="#1557C8" />
   <title>Peachy Plumbers | Trusted Local Plumbers in Gravesend &amp; Kent</title>
   <meta name="description" content="Peachy Plumbers provides fast, friendly, and professional plumbing services for homeowners. Call now for urgent support or request a free quote." />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://peachyplumbers.co.uk/" />
   <link rel="icon" type="image/png" href="/images/Peachy%20Plumbers%20Logo.png" />
 
@@ -46,14 +49,39 @@ import '../styles/global.css';
   {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness","Plumber"],
+    "@id": "https://peachyplumbers.co.uk/#business",
     "name": "Peachy Plumbers",
+    "legalName": "Peachy Plumbers Ltd",
+    "image": "https://peachyplumbers.co.uk/images/Peachy%20Plumbers%20Logo.png",
+    "logo": "https://peachyplumbers.co.uk/images/Peachy%20Plumbers%20Logo.png",
     "telephone": "+44 7752 961456",
     "email": "peachyplumbers@outlook.com",
-    "address": { "@type": "PostalAddress", "addressLocality": "Gravesend", "addressRegion": "Kent", "addressCountry": "GB" },
-    "url": "https://peachyplumbers.co.uk",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "42 Denton Court Road",
+      "addressLocality": "Gravesend",
+      "addressRegion": "Kent",
+      "postalCode": "DA12 2HS",
+      "addressCountry": "GB"
+    },
+    "url": "https://peachyplumbers.co.uk/",
     "openingHours": "Mo-Su 00:00-24:00",
     "priceRange": "££",
-    "areaServed": ["Gravesend","Dartford","Northfleet","Swanscombe","Greenhithe","Longfield","Meopham","Higham","Strood","Rochester"]
+    "areaServed": ["Gravesend","Dartford","Northfleet","Swanscombe","Greenhithe","Longfield","Meopham","Higham","Strood","Rochester"],
+    "sameAs": [
+      "https://www.yell.com/biz/peachy-plumbers-gravesend-10853100/",
+      "https://nextdoor.co.uk/pages/peachy-plumbers/"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://peachyplumbers.co.uk/#website",
+    "url": "https://peachyplumbers.co.uk/",
+    "name": "Peachy Plumbers",
+    "publisher": { "@id": "https://peachyplumbers.co.uk/#business" }
   }
   </script>
 </head>
@@ -117,7 +145,7 @@ import '../styles/global.css';
       <div>
         <p class="hero-badge">Trusted Local Plumbers for UK Homes</p>
 
-        <h1>Fast, Friendly Plumbing Support When Your Home Needs It Most</h1>
+        <h1>Peachy Plumbers: Fast, Friendly Plumbing Support When Your Home Needs It Most</h1>
 
         <p class="hero-sub">
           From urgent leaks to full boiler support, Peachy Plumbers delivers professional repairs and
@@ -586,8 +614,8 @@ import '../styles/global.css';
       </div>
 
       <div class="reveal" data-delay="200">
-        <form id="quote-form" class="quote-form" novalidate>
-          <input type="hidden" name="access_key" value="REPLACE_WITH_REAL_FORM_ACCESS_KEY" />
+        <form id="quote-form" class="quote-form" data-fallback-email="peachyplumbers@outlook.com" novalidate>
+          <input type="hidden" name="access_key" value={web3FormsAccessKey} />
           <input type="hidden" name="subject" value="New Quote Request – Peachy Plumbers" />
           <input type="hidden" name="from_name" value="Peachy Plumbers Website" />
           <input type="hidden" id="form_started_at" name="form_started_at" value="" />
