@@ -286,6 +286,7 @@ if (form) {
       if (submitBtn) submitBtn.disabled = false;
       return;
     }
+    data.set('access_key', accessKey);
 
     fetch('https://api.web3forms.com/submit', { method: 'POST', body: data })
       .then(res => res.json())
