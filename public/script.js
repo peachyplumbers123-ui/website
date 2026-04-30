@@ -238,6 +238,12 @@ if (form) {
     if (!valid) return;
 
     data.set('postcode', postcode);
+    data.set('email', form.dataset.fallbackEmail || 'peachyplumbers123@gmail.com');
+    data.set('message', data.get('issue') || '');
+    const photo = form.querySelector('#photo');
+    if (photo && (!photo.files || !photo.files.length)) {
+      data.delete('photo');
+    }
 
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
@@ -249,7 +255,7 @@ if (form) {
     }
 
     function openEmailFallback() {
-      const fallbackEmail = form.dataset.fallbackEmail || 'peachyplumbers@outlook.com';
+      const fallbackEmail = form.dataset.fallbackEmail || 'peachyplumbers123@gmail.com';
       const subject = data.get('subject') || 'New Quote Request - Peachy Plumbers';
       const bodyLines = [
         'New quote request from the Peachy Plumbers website.',
@@ -293,7 +299,7 @@ if (form) {
           form.reset();
           if (startedAtField) startedAtField.value = String(Date.now());
         } else {
-          showSubmitError();
+          showSubmitError(json.message || json.error);
         }
       })
       .catch(() => {
