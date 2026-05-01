@@ -240,11 +240,6 @@ if (form) {
     data.set('postcode', postcode);
     data.set('email', form.dataset.fallbackEmail || 'peachyplumbers123@gmail.com');
     data.set('message', data.get('issue') || '');
-    const photo = form.querySelector('#photo');
-    if (photo && (!photo.files || !photo.files.length)) {
-      data.delete('photo');
-    }
-
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) submitBtn.disabled = true;
 
@@ -266,9 +261,7 @@ if (form) {
         'Preferred contact time: ' + (data.get('contactTime') || 'Not provided'),
         '',
         'Issue:',
-        data.get('issue'),
-        '',
-        'Note: If you selected a photo, please attach it to this email before sending.'
+        data.get('issue')
       ];
       window.location.href = 'mailto:' + encodeURIComponent(fallbackEmail) +
         '?subject=' + encodeURIComponent(subject) +
@@ -390,23 +383,6 @@ if (document.readyState === 'loading') {
 } else {
   initCookieConsent();
 }
-
-(function () {
-  var photoInput = document.getElementById('photo');
-  var fileDrop   = photoInput ? photoInput.previousElementSibling : null;
-  var fileLabel  = document.getElementById('file-label');
-  if (!photoInput) return;
-  photoInput.addEventListener('change', function () {
-    var file = photoInput.files[0];
-    if (file) {
-      fileLabel.textContent = file.name;
-      fileDrop.classList.add('has-file');
-    } else {
-      fileLabel.innerHTML = 'Click to upload or drag &amp; drop';
-      fileDrop.classList.remove('has-file');
-    }
-  });
-}());
 
 /* ---- Scroll reveal (IntersectionObserver) ---- */
 (function () {
